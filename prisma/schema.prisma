@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  INCOMPLETE
+  TRIALING
+}
+
+enum VideoQuality {
+  SD
+  HD
+  FULL_HD
+  UHD
+}
+
+model User {
+  id               String          @id @default(cuid())
+  email            String          @unique
+  name             String?
+  avatarUrl        String?
+  stripeCustomerId String?         @unique
+  subscription     Subscription?
+  favorites        Favorite[]
+  watchProgress    WatchProgress[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSubscriptionId String             @unique
+  stripePriceId        String
+  status               SubscriptionStatus
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+}
+
+model Movie {
+  id            String          @id @default(cuid())
+  title         String
+  slug          String          @unique
+  description   String
+  posterUrl     String
+  backdropUrl   String?
+  releaseYear   Int
+  durationMins  Int
+  rating        String?
+  genre         String[]
+  isFeatured    Boolean         @default(false)
+  videoSources  VideoSource[]
+  favorites     Favorite[]
+  watchProgress WatchProgress[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model VideoSource {
+  id        String       @id @default(cuid())
+  movieId   String
+  movie     Movie        @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  url       String
+  quality   VideoQuality @default(HD)
+  isHls     Boolean      @default(true)
+  createdAt DateTime     @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  movieId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, movieId])
+}
+
+model WatchProgress {
+  id              String   @id @default(cuid())
+  userId          String
+  movieId         String
+  progressSeconds Int      @default(0)
+  completed       Boolean  @default(false)
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie           Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, movieId])
+}
