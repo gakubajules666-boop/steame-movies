@@ -1,0 +1,46 @@
+streamflix/
+├─ prisma/
+│  └─ schema.prisma
+├─ public/
+│  └─ favicon.ico
+├─ src/
+│  ├─ app/
+│  │  ├─ api/
+│  │  │  └─ stripe/
+│  │  │     └─ checkout/
+│  │  │        └─ route.ts
+│  │  ├─ movies/
+│  │  │  └─ [id]/
+│  │  │     └─ page.tsx
+│  │  ├─ watch/
+│  │  │  └─ [id]/
+│  │  │     └─ page.tsx
+│  │  ├─ globals.css
+│  │  ├─ layout.tsx
+│  │  └─ page.tsx
+│  ├─ components/
+│  │  ├─ layout/
+│  │  │  ├─ Navbar.tsx
+│  │  │  └─ Footer.tsx
+│  │  ├─ movie/
+│  │  │  └─ MovieCard.tsx
+│  │  └─ video/
+│  │     └─ HlsPlayer.tsx
+│  ├─ lib/
+│  │  ├─ constants.ts
+│  │  ├─ prisma.ts
+│  │  ├─ stripe.ts
+│  │  └─ supabase/
+│  │     ├─ browser.ts
+│  │     └─ server.ts
+│  ├─ store/
+│  │  └─ player-store.ts
+│  └─ types/
+│     └─ index.ts
+├─ .env.local.example
+├─ middleware.ts
+├─ next.config.js
+├─ package.json
+├─ postcss.config.js
+├─ tailwind.config.js
+└─ tsconfig.json
