@@ -1,0 +1,4 @@
+mkdir streamflix
+cd streamflix
+
+npm init -y
